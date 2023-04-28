@@ -7,9 +7,26 @@
 
 import UIKit
 import MapKit
-extension UIViewController{
+extension UIViewController {
+
+    func hideKeyboardWhenTappedAround() {
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+
+        tap.cancelsTouchesInView = false
+
+        view.addGestureRecognizer(tap)
+
+    }
+
     
-    
+
+    @objc func dismissKeyboard() {
+
+        view.endEditing(true)
+
+    }
+
 }
 
 
@@ -58,7 +75,7 @@ class ViewController: UIViewController,CLLocationManagerDelegate,UITableViewDele
         locationManager.requestWhenInUseAuthorization()
         mapView.showsUserLocation = true
         
-
+        self.hideKeyboardWhenTappedAround()
         // Do any additional setup after loading the view.
         let center = CLLocationCoordinate2D(latitude: userLat, longitude: userLong)
         //let center2 = locationManager.location!.coordinate
