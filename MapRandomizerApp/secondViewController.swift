@@ -19,6 +19,7 @@ class secondViewController: UIViewController,MKMapViewDelegate {
     var a = 0
     var b = 0
     var test = 0
+    var directions = [String]()
 var uniIndex = 0
     @IBOutlet weak var mapViewOutlet: MKMapView!
     
@@ -60,6 +61,7 @@ var uniIndex = 0
                       for route in unwrappedResponse.routes {
                           self.mapViewOutlet.addOverlay(route.polyline)
                           self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          
                       }
                   }
             
@@ -84,6 +86,7 @@ var uniIndex = 0
                       for route in unwrappedResponse.routes {
                           self.mapViewOutlet.addOverlay(route.polyline)
                           self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          directions = route.steps.
                       }
                   }
         }
