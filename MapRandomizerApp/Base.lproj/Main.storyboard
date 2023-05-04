@@ -247,7 +247,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="Directions" destination="TXs-EY-u69" id="o9c-bO-X8q"/>
                         <outlet property="labelOutlet" destination="1aW-tZ-nyd" id="XEp-kx-LsJ"/>
                         <outlet property="mapViewOutlet" destination="mV1-A5-VbW" id="jcx-n3-zyY"/>
                         <outlet property="tableViewOutlet" destination="Ymd-ef-kJc" id="UJ5-Mx-fYD"/>
