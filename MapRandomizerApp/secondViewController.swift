@@ -7,7 +7,18 @@
 
 import UIKit
 import MapKit
-class secondViewController: UIViewController,MKMapViewDelegate {
+class secondViewController: UIViewController,MKMapViewDelegate,UITableViewDelegate,UITableViewDataSource
+{
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return directionsIn.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "theCell")!
+        cell.textLabel?.text = directionsIn[indexPath.row]
+                return cell
+    }
     var incoming : [String] = []
     var incomingD : [String] = []
     var tIncoming : [String] = []
@@ -19,14 +30,19 @@ class secondViewController: UIViewController,MKMapViewDelegate {
     var a = 0
     var b = 0
     var test = 0
-    var directions = [String]()
+    var directionsIn = [String]()
 var uniIndex = 0
     @IBOutlet weak var mapViewOutlet: MKMapView!
     
+    @IBOutlet weak var tableViewOutlet: UITableView!
+    var currentStepIndex = 0
     @IBOutlet weak var labelOutlet: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         mapViewOutlet.delegate = self
+        tableViewOutlet.delegate = self
+        tableViewOutlet.dataSource = self
+        tableViewOutlet.isHidden = true
         // Do any additional setup after loading the view.
         
 //        let request = MKDirections.Request()
@@ -41,7 +57,8 @@ var uniIndex = 0
     override func viewDidAppear(_ animated: Bool) {
         let overlays = mapViewOutlet.overlays
         mapViewOutlet.removeOverlays(overlays)
-
+        directionsIn.removeAll()
+        tableViewOutlet.isHidden = true
          test = Int.random(in:1..<3)
         if test == 1 && tIncoming.count > 0{
              a = Int.random(in: 0..<tIncoming.count)
@@ -57,16 +74,19 @@ var uniIndex = 0
 
                   directions.calculate { [unowned self] response, error in
                       guard let unwrappedResponse = response else { return }
+                      let route = unwrappedResponse.routes[0]
+                                  self.mapViewOutlet.addOverlay(route.polyline)
 
-                      for route in unwrappedResponse.routes {
-                          self.mapViewOutlet.addOverlay(route.polyline)
                           self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-                          
+                      for i in 0...route.steps.count-1{
+                          let step = route.steps[i]
+                          directionsIn.append(step.instructions)
+                          tableViewOutlet.reloadData()
+
                       }
                   }
             
-            
-            
+           
             
         }
         else{
@@ -78,17 +98,22 @@ var uniIndex = 0
                   request.requestsAlternateRoutes = true
                   request.transportType = .automobile
 
-                  let directions = MKDirections(request: request)
+            var directions = MKDirections(request: request)
 
                   directions.calculate { [unowned self] response, error in
                       guard let unwrappedResponse = response else { return }
+                      directionsIn.removeAll()
 
-                      for route in unwrappedResponse.routes {
-                          self.mapViewOutlet.addOverlay(route.polyline)
+                      let route = unwrappedResponse.routes[0]
+                                  self.mapViewOutlet.addOverlay(route.polyline)
+
                           self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-                          directions = route.steps.
-                      }
-                  }
+                      for i in 0...route.steps.count-1{
+                          let step = route.steps[i]
+                          directionsIn.append(step.instructions)
+                          tableViewOutlet.reloadData()
+
+                      }                  }
         }
         
         
@@ -114,10 +139,17 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
                           }
                       }
                 
@@ -133,10 +165,17 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
                           }
                       }
                 
@@ -152,10 +191,17 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
                           }
                       }
                 
@@ -176,10 +222,17 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
                           }
                       }
                 
@@ -195,10 +248,17 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
                           }
                       }
                 
@@ -214,12 +274,18 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-                          }
-                      }
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
+                          }                      }
                 
             }
             
@@ -245,10 +311,17 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
                           }
                       }
                 
@@ -264,10 +337,17 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
                           }
                       }
                 
@@ -283,10 +363,17 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
                           }
                       }
                 
@@ -304,10 +391,17 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
                           }
                       }
                 
@@ -323,12 +417,18 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-                          }
-                      }
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
+                          }                      }
                 
             }
             else if select == 2{
@@ -342,10 +442,17 @@ var uniIndex = 0
 
                       directions.calculate { [unowned self] response, error in
                           guard let unwrappedResponse = response else { return }
+                          directionsIn.removeAll()
 
-                          for route in unwrappedResponse.routes {
-                              self.mapViewOutlet.addOverlay(route.polyline)
+                          let route = unwrappedResponse.routes[0]
+                                      self.mapViewOutlet.addOverlay(route.polyline)
+
                               self.mapViewOutlet.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                          for i in 0...route.steps.count-1{
+                              let step = route.steps[i]
+                              directionsIn.append(step.instructions)
+                              tableViewOutlet.reloadData()
+
                           }
                       }
                 
@@ -359,6 +466,14 @@ var uniIndex = 0
         return renderer
     }
 
+    @IBAction func directionsButton(_ sender: Any) {
+        if tableViewOutlet.isHidden == true{
+            tableViewOutlet.isHidden = false
+        }
+        else{
+            tableViewOutlet.isHidden = true
+        }
+    }
     
     /*
     // MARK: - Navigation
